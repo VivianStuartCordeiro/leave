@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeaveFlow | Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dashboard-root admin-dashboard">
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">LF</div>
+            <span>Leave<strong>Flow</strong></span>
+        </div>
+        
+        <nav class="main-menu">
+            <p class="menu-label">Main Menu</p>
+            <a href="#overview" class="nav-item active" onclick="showSection('overview')"><i data-lucide="layout-dashboard"></i> Overview</a>
+            <a href="#requests" class="nav-item" onclick="showSection('requests')"><i data-lucide="clipboard-list"></i> All Requests</a>
+            <a href="#employees" class="nav-item" onclick="showSection('employees')"><i data-lucide="users"></i> Employees</a>
+            <a href="#reports" class="nav-item" onclick="showSection('reports')"><i data-lucide="bar-chart-3"></i> Reports</a>
+        </nav>
+
+        <nav class="account-menu">
+            <p class="menu-label">Account</p>
+            <a href="#settings" class="nav-item" onclick="showSection('settings')"><i data-lucide="settings"></i> Settings</a>
+            <button id="logout-btn" class="nav-item logout"><i data-lucide="log-out"></i> Logout</button>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Search requests or staff...">
+            </div>
+            <div class="user-profile">
+                <div class="notification-bell">
+                    <i data-lucide="bell"></i>
+                    <span class="badge">5</span>
+                </div>
+                <div class="profile-pill">
+                    <div class="avatar">VC</div>
+                    <div class="profile-info">
+                        <span id="welcome-text">Vivian Cordeiro</span>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-scroll-area">
+            <!-- Overview Section -->
+            <section id="overview" class="dashboard-section">
+                <div class="header-intro">
+                    <h1>Leave Management</h1>
+                    <p>Monitor and manage office leave applications.</p>
+                </div>
+
+                <section class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i data-lucide="file-text"></i></div>
+                        <div class="stat-details">
+                            <p>Total Pending</p>
+                            <h3 id="pending-count">14</h3>
+                            <span class="trend positive">+3 new today</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i data-lucide="user-check"></i></div>
+                        <div class="stat-details">
+                            <p>On Leave Today</p>
+                            <h3>8</h3>
+                            <span class="trend neutral">Steady</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i data-lucide="alert-circle"></i></div>
+                        <div class="stat-details">
+                            <p>Critical Absences</p>
+                            <h3>2</h3>
+                            <span class="trend negative">Action required</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="timetable-section">
+                    <div class="card-header">
+                        <h2>Pending Approvals</h2>
+                        <div class="header-actions">
+                            <button id="refresh-btn" class="btn-secondary"><i data-lucide="refresh-cw"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Leave Type</th>
+                                    <th>Duration</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="request-body">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 20px;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <!-- All Requests Section -->
+            <section id="requests" class="dashboard-section" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>All Leave Requests</h2>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="all-requests-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Leave Type</th>
+                                    <th>Duration</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Date Requested</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-requests-body">
+                                <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Employees Section -->
+            <section id="employees" class="dashboard-section" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Employee Directory</h2>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="employees-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employees-body">
+                                <tr><td colspan="4" style="text-align: center; padding: 20px;">No employees found</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="dashboard-section" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Settings</h2>
+                    </div>
+                    <form id="settings-form" style="max-width: 500px;">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="full-name" placeholder="Your full name">
+                        </div>
+                        <div class="input-group">
+                            <label>Phone</label>
+                            <input type="tel" id="phone" placeholder="Your phone number">
+                        </div>
+                        <div class="input-group">
+                            <label>Department</label>
+                            <input type="text" id="department" placeholder="Your department">
+                        </div>
+                        <button type="submit" class="btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="dashboard.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        // Settings form handler
+        const settingsForm = document.getElementById('settings-form');
+        if (settingsForm) {
+            settingsForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const user = JSON.parse(localStorage.getItem('leaveflow_user'));
+                saveSettings(user.id);
+            });
+        }
+    </script>
+</body>
+</html>

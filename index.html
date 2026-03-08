@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeaveFlow | Secure Login</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- INTERNAL CSS (Fixes the unstyled page issue) --- */
+        :root {
+            --bg-main: #0b111b;
+            --bg-card: #111827;
+            --bg-input: #1f2937;
+            --accent-blue: #3b82f6;
+            --text-primary: #ffffff;
+            --text-muted: #9ca3af;
+            --border: #374151;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .logo-icon {
+            background: var(--accent-blue);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin: 0 auto 16px;
+            font-weight: 800;
+        }
+
+        .tab-container {
+            display: flex;
+            background: var(--bg-input);
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active { background: var(--accent-blue); color: white; }
+
+        .login-panel { display: none; }
+        .login-panel.active { display: block; }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .submit-btn:disabled { background: #1d4ed8; opacity: 0.7; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-icon">LF</div>
+        <h1 style="font-size: 1.5rem; margin-bottom: 8px;">LeaveFlow Portal</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px;">Secure office access</p>
+
+        <div class="tab-container">
+            <button class="tab-btn active" id="admin-tab" onclick="switchTab('admin')">Manager</button>
+            <button class="tab-btn" id="employee-tab" onclick="switchTab('employee')">Employee</button>
+        </div>
+
+        <form id="admin-form" class="login-panel active" data-role="admin">
+            <div class="input-group">
+                <label>Work Email</label>
+                <input type="email" id="admin-id" placeholder="manager@company.com" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="admin-pass" required>
+            </div>
+            <div class="input-group">
+                <label>Approval Code</label>
+                <input type="text" id="access-code" placeholder="8-digit code" required>
+            </div>
+            <button type="submit" class="submit-btn">Sign In as Manager</button>
+        </form>
+
+        <form id="employee-form" class="login-panel" data-role="employee">
+            <div class="input-group">
+                <label>Work Email</label>
+                <input type="email" id="emp-email" placeholder="employee@company.com" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="emp-pass" required>
+            </div>
+            <button type="submit" class="submit-btn">Sign In as Employee</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Internal Tab Logic
+        function switchTab(role) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.login-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(`${role}-tab`).classList.add('active');
+            document.getElementById(`${role}-form`).classList.add('active');
+        }
+        lucide.createIcons();
+    </script>
+</body>
+</html>

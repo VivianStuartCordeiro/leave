@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "workflow": {
+    "approval_levels": 2
+  },
+  "constraints": {
+    "max_parallel_leaves_per_department": 3,
+    "blackout_dates": []
+  },
+  "leave_types": {
+    "Sick": {
+      "annual_quota": 12,
+      "max_consecutive_days": 10,
+      "requires_document_after_days": 2
+    },
+    "Vacation": {
+      "annual_quota": 20,
+      "max_consecutive_days": 20,
+      "requires_document_after_days": 0
+    },
+    "Personal": {
+      "annual_quota": 6,
+      "max_consecutive_days": 5,
+      "requires_document_after_days": 0
+    },
+    "Casual": {
+      "annual_quota": 8,
+      "max_consecutive_days": 5,
+      "requires_document_after_days": 0
+    },
+    "Maternity": {
+      "annual_quota": 90,
+      "max_consecutive_days": 90,
+      "requires_document_after_days": 1
+    },
+    "Paternity": {
+      "annual_quota": 15,
+      "max_consecutive_days": 15,
+      "requires_document_after_days": 1
+    }
+  }
+}

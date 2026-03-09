@@ -1,0 +1,34 @@
+{
+  "by_user_id": {
+    "809b0318-c6c1-43f6-8da5-46d7b0bc6bec": {
+      "user_id": "809b0318-c6c1-43f6-8da5-46d7b0bc6bec",
+      "email": "manager.new@leaveflow.local",
+      "manager_id": "MGR-809B0318",
+      "employee_id": "",
+      "employment_status": "active",
+      "full_name": "",
+      "department": ""
+    },
+    "2ec9cda7-0edc-4545-b0e8-ddcaf68c2ca4": {
+      "user_id": "2ec9cda7-0edc-4545-b0e8-ddcaf68c2ca4",
+      "email": "john@company.com",
+      "manager_id": "MGR-809B0318",
+      "employee_id": "EMP-3001",
+      "employment_status": "active",
+      "full_name": "john doe",
+      "department": "developer"
+    }
+  },
+  "by_manager_id": {
+    "MGR-809B0318": {
+      "user_id": "809b0318-c6c1-43f6-8da5-46d7b0bc6bec",
+      "email": "manager.new@leaveflow.local"
+    }
+  },
+  "by_employee_id": {
+    "EMP-3001": {
+      "user_id": "2ec9cda7-0edc-4545-b0e8-ddcaf68c2ca4",
+      "email": "john@company.com"
+    }
+  }
+}

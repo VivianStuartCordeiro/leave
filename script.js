@@ -15,10 +15,16 @@ const APP_CONFIG = {
 
 // --- VALIDATION ---
 function validateAdmin(form) {
-    const email = form.querySelector("#admin-id").value.trim();
+    const managerIdOrEmail = form.querySelector("#admin-id").value.trim();
     const password = form.querySelector("#admin-pass").value.trim();
     const accessCode = form.querySelector("#access-code").value.trim();
-    return email.includes('@') && password.length >= 8 && accessCode.length === 8;
+    return (managerIdOrEmail.toUpperCase().startsWith("MGR-") || managerIdOrEmail.includes("@")) && password.length >= 8 && accessCode.length === 8;
+}
+
+function validateEmployee(form) {
+    const employeeId = form.querySelector("#emp-email").value.trim().toUpperCase();
+    const password = form.querySelector("#emp-pass").value.trim();
+    return employeeId.startsWith("EMP-") && password.length >= 6;
 }
 
 // --- CORE HANDLER ---
@@ -27,7 +33,12 @@ async function handleSubmit(form) {
   const submitBtn = form.querySelector(".submit-btn");
   
   if (role === "admin" && !validateAdmin(form)) {
-      alert("Please check your credentials.");
+      alert("Use valid manager credentials.");
+      return;
+  }
+
+  if (role === "employee" && !validateEmployee(form)) {
+      alert("Use valid employee credentials.");
       return;
   }
 
@@ -36,10 +47,20 @@ async function handleSubmit(form) {
 
   try {
     const payload = {
-      email: form.querySelector(role === 'admin' ? "#admin-id" : "#emp-email").value,
       password: form.querySelector(role === 'admin' ? "#admin-pass" : "#emp-pass").value,
       accessCode: role === 'admin' ? form.querySelector("#access-code").value : null
     };
+
+    if (role === 'admin') {
+      const managerIdOrEmail = form.querySelector("#admin-id").value.trim();
+      if (managerIdOrEmail.includes("@")) {
+        payload.email = managerIdOrEmail.toLowerCase();
+      } else {
+        payload.managerId = managerIdOrEmail.toUpperCase();
+      }
+    } else {
+      payload.employeeId = form.querySelector("#emp-email").value.trim().toUpperCase();
+    }
 
     const response = await fetch(role === 'admin' ? APP_CONFIG.api.adminLogin : APP_CONFIG.api.employeeLogin, {
       method: "POST",

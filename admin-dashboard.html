@@ -36,15 +36,15 @@
                 <input type="text" placeholder="Search requests or staff...">
             </div>
             <div class="user-profile">
-                <div class="notification-bell">
+                <div id="open-notifications" class="notification-bell" style="cursor: pointer;">
                     <i data-lucide="bell"></i>
-                    <span class="badge">5</span>
+                    <span id="notification-badge" class="badge">0</span>
                 </div>
                 <div class="profile-pill">
                     <div class="avatar">VC</div>
                     <div class="profile-info">
                         <span id="welcome-text">Vivian Cordeiro</span>
-                        <small>Administrator</small>
+                        <small id="manager-id-label">Manager</small>
                     </div>
                 </div>
             </div>
@@ -63,24 +63,24 @@
                         <div class="stat-icon blue"><i data-lucide="file-text"></i></div>
                         <div class="stat-details">
                             <p>Total Pending</p>
-                            <h3 id="pending-count">14</h3>
-                            <span class="trend positive">+3 new today</span>
+                            <h3 id="pending-count">0</h3>
+                            <span class="trend positive"></span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon purple"><i data-lucide="user-check"></i></div>
                         <div class="stat-details">
                             <p>On Leave Today</p>
-                            <h3>8</h3>
-                            <span class="trend neutral">Steady</span>
+                            <h3 id="on-leave-count">0</h3>
+                            <span class="trend neutral"></span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon orange"><i data-lucide="alert-circle"></i></div>
                         <div class="stat-details">
                             <p>Critical Absences</p>
-                            <h3>2</h3>
-                            <span class="trend negative">Action required</span>
+                            <h3 id="critical-count">0</h3>
+                            <span class="trend negative"></span>
                         </div>
                     </div>
                 </section>
@@ -100,13 +100,14 @@
                                     <th>Leave Type</th>
                                     <th>Duration</th>
                                     <th>Reason</th>
+                                    <th>Proof</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="request-body">
                                 <tr>
-                                    <td colspan="6" style="text-align: center; padding: 20px;">Loading...</td>
+                                    <td colspan="7" style="text-align: center; padding: 20px;">Loading...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -146,18 +147,52 @@
                     <div class="card-header">
                         <h2>Employee Directory</h2>
                     </div>
+                    <form id="create-employee-form" style="margin-bottom: 24px;">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Employee Name</label>
+                                <input type="text" id="new-employee-name" placeholder="e.g. John Doe" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Department</label>
+                                <input type="text" id="new-employee-department" placeholder="e.g. Engineering" required>
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Email</label>
+                                <input type="email" id="new-employee-email" placeholder="employee@company.com" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Employee ID</label>
+                                <input type="text" id="new-employee-id" placeholder="EMP-XXXXXXXX" required>
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Temporary Password</label>
+                                <input type="password" id="new-employee-password" minlength="8" placeholder="Min 8 characters" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Create Employee</button>
+                    </form>
                     <div class="table-wrapper">
                         <table id="employees-table">
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Employee ID</th>
                                     <th>Email</th>
                                     <th>Department</th>
                                     <th>Status</th>
+                                    <th>Approved Days</th>
+                                    <th>Pending Days</th>
+                                    <th>Remaining Days</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="employees-body">
-                                <tr><td colspan="4" style="text-align: center; padding: 20px;">No employees found</td></tr>
+                                <tr><td colspan="9" style="text-align: center; padding: 20px;">No employees found</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -183,10 +218,116 @@
                             <label>Department</label>
                             <input type="text" id="department" placeholder="Your department">
                         </div>
+                        <div class="input-group">
+                            <label>Manager ID</label>
+                            <input type="text" id="manager-id" placeholder="Auto-generated manager ID" readonly>
+                        </div>
                         <button type="submit" class="btn-primary">Save Settings</button>
                     </form>
+                    <div style="margin-top: 24px;">
+                        <h3 style="margin-bottom: 10px;">Leave Policy (JSON)</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Configure yearly quotas and leave constraints.
+                        </p>
+                        <textarea id="policy-json" style="width: 100%; min-height: 260px;" spellcheck="false"></textarea>
+                        <div style="display: flex; gap: 12px; margin-top: 12px;">
+                            <button id="reload-policy-btn" type="button" class="btn-secondary">Reload Policy</button>
+                            <button id="save-policy-btn" type="button" class="btn-primary">Save Policy</button>
+                        </div>
+                    </div>
                 </div>
             </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="dashboard-section" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Reports & Analytics</h2>
+                        <div class="header-actions">
+                            <button id="refresh-analytics-btn" class="btn-secondary"><i data-lucide="refresh-cw"></i> Refresh Analytics</button>
+                            <button id="refresh-audit-btn" class="btn-secondary"><i data-lucide="refresh-cw"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="stats-container" style="margin-bottom: 16px;">
+                        <div class="stat-card">
+                            <div class="stat-details">
+                                <p>Total Requests</p>
+                                <h3 id="report-total-requests">0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-details">
+                                <p>Approval Rate</p>
+                                <h3 id="report-approval-rate">0%</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-details">
+                                <p>Avg Approval Time</p>
+                                <h3 id="report-avg-approval-time">0h</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-wrapper" style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:8px;">Monthly Trend</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Approved</th>
+                                    <th>Pending</th>
+                                    <th>Declined</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthly-trend-body">
+                                <tr><td colspan="4" style="text-align:center;padding:20px;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-wrapper" style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:8px;">Top Absentee Employees</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Approved Days</th>
+                                    <th>Pending Days</th>
+                                    <th>Declined Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-absent-body">
+                                <tr><td colspan="4" style="text-align:center;padding:20px;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-wrapper">
+                        <h3 style="margin-bottom:8px;">Audit Trail</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Event</th>
+                                    <th>Actor</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audit-body">
+                                <tr><td colspan="4" style="text-align: center; padding: 20px;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div id="notification-panel" class="card" style="display:none; position:absolute; right:20px; top:90px; width:420px; max-height:520px; overflow:auto; z-index:200;">
+            <div class="card-header">
+                <h3>Notifications</h3>
+                <div class="header-actions">
+                    <button id="mark-all-read-btn" class="btn-secondary">Mark All Read</button>
+                    <button id="close-notifications-btn" class="btn-secondary">Close</button>
+                </div>
+            </div>
+            <div id="notification-list"></div>
         </div>
     </main>
 

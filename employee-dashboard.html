@@ -27,11 +27,17 @@
     <main class="main-content">
         <header class="top-bar">
             <h2 id="welcome-text">Employee Portal</h2>
-            <div class="profile-pill">
-                <div class="avatar">EP</div>
-                <div class="profile-info">
-                    <span class="user-email-display">Employee</span>
-                    <small>Employee</small>
+            <div class="user-profile">
+                <div id="open-notifications" class="notification-bell" style="cursor: pointer;">
+                    <i data-lucide="bell"></i>
+                    <span id="notification-badge" class="badge">0</span>
+                </div>
+                <div class="profile-pill">
+                    <div class="avatar">EP</div>
+                    <div class="profile-info">
+                        <span class="user-email-display">Employee</span>
+                        <small id="employee-id-label">Employee</small>
+                    </div>
                 </div>
             </div>
         </header>
@@ -70,6 +76,10 @@
                                 <label>Reason</label>
                                 <textarea id="reason" placeholder="Briefly explain your request..." required></textarea>
                             </div>
+                            <div class="input-group">
+                                <label>Proof Document (optional)</label>
+                                <input type="file" id="proof-file" accept=".pdf,.png,.jpg,.jpeg">
+                            </div>
                             <button type="submit" class="btn-primary">Submit Application</button>
                         </form>
                     </section>
@@ -78,29 +88,7 @@
                         <div class="card-header">
                             <h2>Leave Balance</h2>
                         </div>
-                        <div style="padding: 20px;">
-                            <div style="margin-bottom: 20px;">
-                                <p style="color: var(--text-secondary); margin-bottom: 5px;">Sick Leave</p>
-                                <div style="background: rgba(59, 130, 246, 0.2); height: 8px; border-radius: 4px;">
-                                    <div style="background: var(--accent-blue); height: 100%; width: 75%; border-radius: 4px;"></div>
-                                </div>
-                                <small style="color: var(--text-secondary);">9 / 12 days used</small>
-                            </div>
-                            <div style="margin-bottom: 20px;">
-                                <p style="color: var(--text-secondary); margin-bottom: 5px;">Vacation</p>
-                                <div style="background: rgba(139, 92, 246, 0.2); height: 8px; border-radius: 4px;">
-                                    <div style="background: var(--accent-purple); height: 100%; width: 50%; border-radius: 4px;"></div>
-                                </div>
-                                <small style="color: var(--text-secondary);">15 / 20 days used</small>
-                            </div>
-                            <div>
-                                <p style="color: var(--text-secondary); margin-bottom: 5px;">Personal</p>
-                                <div style="background: rgba(245, 158, 11, 0.2); height: 8px; border-radius: 4px;">
-                                    <div style="background: #f59e0b; height: 100%; width: 33%; border-radius: 4px;"></div>
-                                </div>
-                                <small style="color: var(--text-secondary);">5 / 6 days used</small>
-                            </div>
-                        </div>
+                        <div id="leave-balance-cards" style="padding: 20px;"></div>
                     </section>
                 </div>
             </section>
@@ -119,10 +107,12 @@
                                     <th>Dates</th>
                                     <th>Reason</th>
                                     <th>Status</th>
+                                    <th>Proof</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="my-requests">
-                                <tr><td colspan="4" style="text-align: center; padding: 20px;">Loading...</td></tr>
+                                <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -148,10 +138,28 @@
                             <label>Department</label>
                             <input type="text" id="department" placeholder="Your department">
                         </div>
+                        <div class="input-group">
+                            <label>Assigned Manager ID</label>
+                            <input type="text" id="assigned-manager-id" placeholder="e.g. MGR-1A2B3C4D">
+                        </div>
+                        <div class="input-group">
+                            <label>Employee ID</label>
+                            <input type="text" id="employee-id" placeholder="Auto-generated employee ID" readonly>
+                        </div>
                         <button type="submit" class="btn-primary">Save Settings</button>
                     </form>
                 </div>
             </section>
+        </div>
+        <div id="notification-panel" class="card" style="display:none; position:absolute; right:20px; top:90px; width:420px; max-height:520px; overflow:auto; z-index:200;">
+            <div class="card-header">
+                <h3>Notifications</h3>
+                <div class="header-actions">
+                    <button id="mark-all-read-btn" class="btn-secondary">Mark All Read</button>
+                    <button id="close-notifications-btn" class="btn-secondary">Close</button>
+                </div>
+            </div>
+            <div id="notification-list"></div>
         </div>
     </main>
 
